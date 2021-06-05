@@ -1,5 +1,9 @@
 /* See LICENSE file for copyright and license details. */
 
+/* Aliases */
+#define TERM "st"
+#define TERMCLSS "St"
+
 /* appearance */
 static unsigned int borderpx  = 1;        /* border pixel of windows */
 static unsigned int snap      = 32;       /* snap pixel */
@@ -30,13 +34,15 @@ typedef struct {
 	const void *cmd;
 } Sp;
 const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
-const char *spcmd2[] = {"st", "-n", "spfm", "-g", "144x41", "-e", "ranger", NULL };
+const char *spcmd2[] = {"st", "-n", "spranger", "-g", "144x41", "-e", "ranger", NULL };
 const char *spcmd3[] = {"keepassxc", NULL };
+const char *spcmd4[] = {"st", "-n", "spcmus", "-g", "120x34", "-e", "cmus", NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
 	{"spterm",      spcmd1},
 	{"spranger",    spcmd2},
 	{"keepassxc",   spcmd3},
+	{"spcmus",      spcmd4},	
 };
 
 /* tagging */
@@ -50,8 +56,9 @@ static const Rule rules[] = {
 	{ "Gimp",	  NULL,			NULL,		0,				1,			 -1 },
 	{ "Firefox",  NULL,			NULL,		1 << 8,			0,			 -1 },
 	{ NULL,		  "spterm",		NULL,		SPTAG(0),		1,			 -1 },
-	{ NULL,		  "spfm",		NULL,		SPTAG(1),		1,			 -1 },
+	{ NULL,		  "spranger",		NULL,		SPTAG(1),		1,			 -1 },
 	{ NULL,		  "keepassxc",	NULL,		SPTAG(2),		0,			 -1 },
+	{ NULL,		  "spcmus",	NULL,		SPTAG(3),		0,			 -1 },	
 };
 
 /* layout(s) */
@@ -121,10 +128,14 @@ ResourcePref resources[] = {
 #include "movestack.c"
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
+
+        /* Basic Functions */
+
+        { MODKEY|ControlMask,	    XK_comma,  cyclelayout,    {.i = -1 } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },  
+
+	/* Window Managing Keys */
+	
         { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
         { MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -154,8 +165,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_y,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[11]} },
-	{ MODKEY|ControlMask,	    XK_comma,  cyclelayout,    {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_m,      setlayout,      {.v = &layouts[11]} },
 	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -165,9 +175,17 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,            			XK_y,  	   togglescratch,  {.ui = 0 } },
-	{ MODKEY,            			XK_u,	   togglescratch,  {.ui = 1 } },
+
+        /* Program launching */
+	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
+	{ MODKEY|ShiftMask,           XK_Return,  	   togglescratch,  {.ui = 0 } },
+	{ MODKEY,            			XK_q,	   togglescratch,  {.ui = 1 } },
 	{ MODKEY,            			XK_x,	   togglescratch,  {.ui = 2 } },
+	{ MODKEY,            			XK_m,	   togglescratch,  {.ui = 3 } },	
+	/* Tagkeys */
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
