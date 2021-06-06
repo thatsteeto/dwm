@@ -1,8 +1,13 @@
 /* See LICENSE file for copyright and license details. */
 
+/* Aliases */
+#define TERM "st"
+#define TERMCLASS "St"
+
 /* appearance */
 static unsigned int borderpx  = 1;        /* border pixel of windows */
 static unsigned int snap      = 32;       /* snap pixel */
+static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
@@ -25,17 +30,37 @@ static char *colors[][3] = {
        [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
 
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
+const char *spcmd2[] = {"st", "-n", "spranger", "-g", "144x41", "-e", "ranger", NULL };
+const char *spcmd3[] = {"keepassxc", NULL };
+const char *spcmd4[] = {"st", "-n", "spotify", "-g", "144x41", "-e", "spotify", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"spterm",      spcmd1},
+	{"spranger",    spcmd2},
+	{"keepassxc",   spcmd3},
+	{"spotify",      spcmd4},	
+};
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/* class    instance      title       	 tags mask    isfloating   isterminal  noswallow  monitor */
+	{ "Gimp",     NULL,       NULL,       	    1 << 8,       0,           0,         0,        -1 },
+	{ TERMCLASS,   NULL,       NULL,       	    0,            0,           1,         0,        -1 },
+	{ NULL,       NULL,       "Event Tester",   0,            0,           0,         1,        -1 },
+	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     1,           1,         0,        -1 },
+	{ NULL,      "spranger",    NULL,           SPTAG(1),     1,           1,         0,        -1 },
+	{ NULL,      "keepassxc",    NULL,          SPTAG(2),     1,           0,         0,        -1 },
+	{ NULL,      "spotify",      NULL,          SPTAG(3),     1,           0,         0,        -1 },	
 };
 
 /* layout(s) */
@@ -105,10 +130,14 @@ ResourcePref resources[] = {
 #include "movestack.c"
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
+
+        /* Basic Functions */
+
+        { MODKEY|ControlMask,	    XK_comma,  cyclelayout,    {.i = -1 } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },  
+
+	/* Window Managing Keys */
+	
         { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
         { MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -138,8 +167,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_y,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[11]} },
-	{ MODKEY|ControlMask,	    XK_comma,  cyclelayout,    {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_m,      setlayout,      {.v = &layouts[11]} },
 	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -149,6 +177,19 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+
+        /* Program launching */
+
+	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
+	{ MODKEY|ShiftMask,           XK_Return,  	   togglescratch,  {.ui = 0 } },
+	{ MODKEY,            			XK_q,	   togglescratch,  {.ui = 1 } },
+	{ MODKEY,            			XK_x,	   togglescratch,  {.ui = 2 } },
+	{ MODKEY,            			XK_m,	   togglescratch,  {.ui = 3 } },	
+
+	/* Tagkeys */
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -171,7 +212,7 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
