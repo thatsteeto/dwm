@@ -2,7 +2,7 @@
 
 /* Aliases */
 #define TERM "st"
-#define TERMCLSS "St"
+#define TERMCLASS "St"
 
 /* appearance */
 static unsigned int borderpx  = 1;        /* border pixel of windows */
@@ -36,13 +36,13 @@ typedef struct {
 const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
 const char *spcmd2[] = {"st", "-n", "spranger", "-g", "144x41", "-e", "ranger", NULL };
 const char *spcmd3[] = {"keepassxc", NULL };
-const char *spcmd4[] = {"st", "-n", "spcmus", "-g", "120x34", "-e", "cmus", NULL };
+const char *spcmd4[] = {"st", "-n", "spotify", "-g", "144x41", "-e", "spotify", NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
 	{"spterm",      spcmd1},
 	{"spranger",    spcmd2},
 	{"keepassxc",   spcmd3},
-	{"spcmus",      spcmd4},	
+	{"spotify",      spcmd4},	
 };
 
 /* tagging */
@@ -57,8 +57,8 @@ static const Rule rules[] = {
 	{ "Firefox",  NULL,			NULL,		1 << 8,			0,			 -1 },
 	{ NULL,		  "spterm",		NULL,		SPTAG(0),		1,			 -1 },
 	{ NULL,		  "spranger",		NULL,		SPTAG(1),		1,			 -1 },
-	{ NULL,		  "keepassxc",	NULL,		SPTAG(2),		0,			 -1 },
-	{ NULL,		  "spcmus",	NULL,		SPTAG(3),		0,			 -1 },	
+	{ NULL,		  "keepassxc",	NULL,		SPTAG(2),		1,			 -1 },
+	{ NULL,		  "spotify",	NULL,		SPTAG(3),		1,			 -1 },	
 };
 
 /* layout(s) */
@@ -177,6 +177,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
         /* Program launching */
+
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
@@ -184,6 +185,7 @@ static Key keys[] = {
 	{ MODKEY,            			XK_q,	   togglescratch,  {.ui = 1 } },
 	{ MODKEY,            			XK_x,	   togglescratch,  {.ui = 2 } },
 	{ MODKEY,            			XK_m,	   togglescratch,  {.ui = 3 } },	
+
 	/* Tagkeys */
 
 	TAGKEYS(                        XK_1,                      0)
