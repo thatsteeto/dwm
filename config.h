@@ -5,13 +5,13 @@
 #define TERMCLASS "St"
 
 /* appearance */
-static unsigned int borderpx  = 1;        /* border pixel of windows */
+static unsigned int borderpx  = 3;        /* border pixel of windows */
 static unsigned int snap      = 32;       /* snap pixel */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
+static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
 static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
@@ -35,13 +35,13 @@ typedef struct {
 	const void *cmd;
 } Sp;
 const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
-const char *spcmd2[] = {"st", "-n", "spranger", "-g", "144x41", "-e", "ranger", NULL };
+const char *spcmd2[] = {"st", "-n", "splf", "-g", "104x21", "-e", "lf", NULL };
 const char *spcmd3[] = {"keepassxc", NULL };
 const char *spcmd4[] = {"st", "-n", "spotify", "-g", "144x41", "-e", "spotify", NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
 	{"spterm",      spcmd1},
-	{"spranger",    spcmd2},
+	{"splf",    spcmd2},
 	{"keepassxc",   spcmd3},
 	{"spotify",      spcmd4},	
 };
@@ -55,10 +55,10 @@ static const Rule rules[] = {
 	 */
 	/* class    instance      title       	 tags mask    isfloating   isterminal  noswallow  monitor */
 	{ "Gimp",     NULL,       NULL,       	    1 << 8,       0,           0,         0,        -1 },
-	{ TERMCLASS,   NULL,       NULL,       	    0,            0,           1,         0,        -1 },
+	{ "Alacritty",   NULL,       NULL,       	    0,            0,           1,         0,        -1 },
 	{ NULL,       NULL,       "Event Tester",   0,            0,           0,         1,        -1 },
 	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     1,           1,         0,        -1 },
-	{ NULL,      "spranger",    NULL,           SPTAG(1),     1,           1,         0,        -1 },
+	{ NULL,      "splf",    NULL,           SPTAG(1),     1,           1,         0,        -1 },
 	{ NULL,      "keepassxc",    NULL,          SPTAG(2),     1,           0,         0,        -1 },
 	{ NULL,      "spotify",      NULL,          SPTAG(3),     1,           1,         0,        -1 },	
 };
@@ -70,6 +70,7 @@ static int resizehints = 1;    /* 1 means respect size hints in tiled resizals *
 
 #define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
 #include "vanitygaps.c"
+#include <X11/XF86keysym.h>
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -182,11 +183,24 @@ static Key keys[] = {
 
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
+	{ MODKEY,		        XK_w,      spawn,          SHCMD("chromium") },
+	{ MODKEY|ShiftMask,		XK_c,      spawn,          SHCMD("colorscheme") },
 	{ MODKEY|ShiftMask,           XK_Return,  	   togglescratch,  {.ui = 0 } },
 	{ MODKEY,            			XK_q,	   togglescratch,  {.ui = 1 } },
 	{ MODKEY,            			XK_x,	   togglescratch,  {.ui = 2 } },
 	{ MODKEY,            			XK_m,	   togglescratch,  {.ui = 3 } },	
+
+        /* Media Keys */
+
+	{ 0, XF86XK_AudioMute,		spawn,		SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
+	{ 0, XF86XK_AudioRaiseVolume,	spawn,		SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)") },
+	{ 0, XF86XK_AudioLowerVolume,	spawn,		SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)") },
+	{ 0, XF86XK_AudioPrev,		spawn,		SHCMD("playerctl previous") },
+	{ 0, XF86XK_AudioNext,		spawn,		SHCMD("playerctl next") },
+	{ 0, XF86XK_AudioPause,		spawn,		SHCMD("playerctl pause") },
+	{ 0, XF86XK_AudioPlay,		spawn,		SHCMD("playerctl play-pause") },
+	{ 0, XF86XK_AudioStop,		spawn,		SHCMD("playerctl pause") },
+
 
 	/* Tagkeys */
 
