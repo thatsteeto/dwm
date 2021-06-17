@@ -55,7 +55,7 @@ static const Rule rules[] = {
 	 */
 	/* class    instance      title       	 tags mask    isfloating   isterminal  noswallow  monitor */
 	{ "Gimp",     NULL,       NULL,       	    1 << 8,       0,           0,         0,        -1 },
-	{ "Alacritty",   NULL,       NULL,       	    0,            0,           1,         0,        -1 },
+	{ "St",       NULL,       NULL,       	    0,            0,           1,         0,        -1 },
 	{ NULL,       NULL,       "Event Tester",   0,            0,           0,         1,        -1 },
 	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     1,           1,         0,        -1 },
 	{ NULL,      "splf",    NULL,           SPTAG(1),     1,           1,         0,        -1 },
@@ -134,11 +134,12 @@ static Key keys[] = {
 
         /* Basic Functions */
 
-        { MODKEY|ControlMask,	    XK_comma,  cyclelayout,    {.i = -1 } },
+        { MODKEY|ControlMask,           XK_comma,  cyclelayout,    {.i = -1 } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },  
-
-	/* Window Managing Keys */
-	
+	{ MODKEY,                       XK_0,      togglegaps,     {0} },
+	{ MODKEY|ShiftMask,             XK_0,      defaultgaps,    {0} },
+	{ MODKEY,                       XK_Tab,    view,           {0} },
+	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
         { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
         { MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -147,33 +148,20 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_i,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY|Mod4Mask,              XK_u,      incrgaps,       {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_i,      incrigaps,      {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_i,      incrigaps,      {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_o,      incrogaps,      {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_o,      incrogaps,      {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_6,      incrihgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_6,      incrihgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_7,      incrivgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_7,      incrivgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_8,      incrohgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_8,      incrohgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_9,      incrovgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_9,      incrovgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_0,      togglegaps,     {0} },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
+	{ MODKEY|ShiftMask,             XK_equal,  incrgaps,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_minus,  incrgaps,       {.i = -1 } },
+	
+	/* Window Managing Keys */
+	
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_y,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY|ControlMask,           XK_m,      setlayout,      {.v = &layouts[11]} },
+	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[11]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+/*	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } }, */
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
@@ -184,11 +172,12 @@ static Key keys[] = {
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,		        XK_w,      spawn,          SHCMD("chromium") },
+	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
 	{ MODKEY|ShiftMask,		XK_c,      spawn,          SHCMD("colorscheme") },
-	{ MODKEY|ShiftMask,           XK_Return,  	   togglescratch,  {.ui = 0 } },
-	{ MODKEY,            			XK_q,	   togglescratch,  {.ui = 1 } },
-	{ MODKEY,            			XK_x,	   togglescratch,  {.ui = 2 } },
-	{ MODKEY,            			XK_m,	   togglescratch,  {.ui = 3 } },	
+	{ MODKEY|ShiftMask,             XK_Return, togglescratch,  {.ui = 0 } },
+	{ MODKEY,            		XK_q,	   togglescratch,  {.ui = 1 } },
+	{ MODKEY,            		XK_x,	   togglescratch,  {.ui = 2 } },
+	{ MODKEY,            		XK_m,	   togglescratch,  {.ui = 3 } },	
 
         /* Media Keys */
 
@@ -226,7 +215,7 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
