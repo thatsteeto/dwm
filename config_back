@@ -16,13 +16,13 @@ static const unsigned int gappov    = 10;       /* vert outer gap between window
 static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
-static char *fonts[]          = { "Go mono:size=10", "Symbols Nerd Font:pixelsize=12:antialias=true:autohint=true"  };
+static char *fonts[]          = { "Terminus:size=10", "JoyPixels:pixelsize=10:antialias=true:autohint=true"  };
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
-static char selfgcolor[]            = "#f5f5dc";
-static char selbordercolor[]        = "#a52c2b";
-static char selbgcolor[]            = "#a52c2b";
+static char selfgcolor[]            = "#eeeeee";
+static char selbordercolor[]        = "#bb4444";
+static char selbgcolor[]            = "#bb4444";
 static char *colors[][3] = {
        /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
@@ -46,7 +46,7 @@ static Sp scratchpads[] = {
 };
 
 /* tagging */
-static const char *tags[] = { "www", "term", "emacs", "mpv", "cmus"};
+static const char *tags[] = { "I", "II", "III", "IV", "V"};
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class

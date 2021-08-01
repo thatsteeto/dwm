@@ -16,13 +16,13 @@ static const unsigned int gappov    = 10;       /* vert outer gap between window
 static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
-static char *fonts[]          = { "Terminus:size=10", "JoyPixels:pixelsize=10:antialias=true:autohint=true"  };
+static char *fonts[]          = { "Go mono:size=10", "Symbols Nerd Font:pixelsize=12:antialias=true:autohint=true"  };
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
-static char selfgcolor[]            = "#eeeeee";
-static char selbordercolor[]        = "#bb4444";
-static char selbgcolor[]            = "#bb4444";
+static char selfgcolor[]            = "#f5f5dc";
+static char selbordercolor[]        = "#a52c2b";
+static char selbgcolor[]            = "#a52c2b";
 static char *colors[][3] = {
        /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
@@ -36,17 +36,17 @@ typedef struct {
 const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL };
 const char *spcmd2[] = {"st", "-n", "splf", "-g", "104x21", "-e", "lf", NULL };
 const char *spcmd3[] = {"keepassxc", NULL };
-const char *spcmd4[] = {"st", "-n", "spotify", "-g", "144x41", "-e", "spotify", NULL };
+const char *spcmd4[] = {"st", "-n", "spt", "-g", "144x41", "-e", "spt", NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
 	{"spterm",      spcmd1},
 	{"splf",    spcmd2},
 	{"keepassxc",   spcmd3},
-	{"spotify",      spcmd4},	
+	{"spt",      spcmd4},	
 };
 
 /* tagging */
-static const char *tags[] = { "I", "II", "III", "IV", "V"};
+static const char *tags[] = { "www", "term", "emacs", "mpv", "cmus"};
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -59,7 +59,7 @@ static const Rule rules[] = {
 	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     1,           1,         0,        -1 },
 	{ NULL,      "splf",    NULL,           SPTAG(1),     1,           1,         0,        -1 },
 	{ NULL,      "keepassxc",    NULL,          SPTAG(2),     1,           0,         0,        -1 },
-	{ NULL,      "spotify",      NULL,          SPTAG(3),     1,           1,         0,        -1 },	
+	{ NULL,      "spt",      NULL,          SPTAG(3),     1,           1,         0,        -1 },	
 };
 
 /* layout(s) */
@@ -143,7 +143,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY|ControlMask,             XK_i,      incnmaster,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_i,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_equal,  incrgaps,       {.i = +1 } },
@@ -167,24 +167,8 @@ static Key keys[] = {
 
         /* Program launching */
 
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,		        XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,		        XK_w,      spawn,          SHCMD("chromium") },
-	{ MODKEY,		        XK_n,      spawn,          SHCMD("st -e newsboat") },
-	{ 0,				XK_Print,	spawn,		SHCMD("maim /home/teeto/Pictures/Screenshots/pic-full-$(date '+%y%m%d-%H%M-%S').png") },
-	{ ShiftMask,			XK_Print,	spawn,		SHCMD("maim --select /home/teeto/Pictures/Screenshots/pic-area-$(date '+%y%m%d-%H%M-%S').png") },
-	{ MODKEY,		        XK_e,      spawn,          SHCMD("emacs") },
-	{ MODKEY|ShiftMask,		XK_y,      spawn,          SHCMD("ytfzf -D") },
-	{ MODKEY|ShiftMask,		XK_c,      spawn,          SHCMD("dmenu-colorscheme") },
-	{ MODKEY|ShiftMask,		XK_i,      spawn,          SHCMD("dmenu-imageboards") },
-	{ MODKEY,		        XK_c,      spawn,          SHCMD("dmenu-config-edit") },
-	{ MODKEY|ShiftMask,	        XK_a,      spawn,          SHCMD("dmenu-alarm") },
-	{ MODKEY|ShiftMask,             XK_v,      spawn,          SHCMD("dmenu-yank-vid") },
-	{ MODKEY,                       XK_v,      spawn,          SHCMD("dmenu-videos-folder") },
-	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("redshift -O 3500") },
-	{ MODKEY|ShiftMask,             XK_l,      spawn,          SHCMD("redshift -x") },
 	{ MODKEY|ShiftMask,             XK_Return, togglescratch,  {.ui = 0 } },
-	{ MODKEY,            		XK_q,	   togglescratch,  {.ui = 1 } },
+	//{ MODKEY,            		XK_q,	   togglescratch,  {.ui = 1 } },
 	{ MODKEY,            		XK_x,	   togglescratch,  {.ui = 2 } },
 	{ MODKEY,            		XK_m,	   togglescratch,  {.ui = 3 } },	
 
