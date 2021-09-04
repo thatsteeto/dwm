@@ -16,13 +16,13 @@ static const unsigned int gappov    = 10;       /* vert outer gap between window
 static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
-static char *fonts[]          = { "Go mono:size=10", "Symbols Nerd Font:pixelsize=12:antialias=true:autohint=true"  };
-static char normbgcolor[]           = "#222222";
+static char *fonts[]          = { "Terminus:size=9", "Symbols Nerd Font:pixelsize=12:antialias=true:autohint=true"  };
+static char normbgcolor[]           = "#282828";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
 static char selfgcolor[]            = "#f5f5dc";
-static char selbordercolor[]        = "#a52c2b";
-static char selbgcolor[]            = "#a52c2b";
+static char selbordercolor[]        = "#cc241d";
+static char selbgcolor[]            = "#d79921";
 static char *colors[][3] = {
        /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
@@ -110,12 +110,12 @@ static const char *termcmd[]  = { "st", NULL };
 + * Xresources preferences to load at startup
 + */
 ResourcePref resources[] = {
-		{ "dmenufont",          STRING,  &dmenufont },
-		{ "normbgcolor",        STRING,  &normbgcolor },
-		{ "normbordercolor",    STRING,  &normbordercolor },
-		{ "normfgcolor",        STRING,  &normfgcolor },
-		{ "selbgcolor",         STRING,  &selbgcolor },
-		{ "selbordercolor",     STRING,  &selbordercolor },
+		{ "color0",          STRING,  &dmenufont },
+		{ "color8",        STRING,  &normbgcolor },
+		{ "color0",    STRING,  &normbordercolor },
+		{ "color4",        STRING,  &normfgcolor },
+		{ "color0",         STRING,  &selbgcolor },
+		{ "color4",     STRING,  &selbordercolor },
 		{ "selfgcolor",         STRING,  &selfgcolor },
 		{ "borderpx",          	INTEGER, &borderpx },
 		{ "snap",          		INTEGER, &snap },
